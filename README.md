@@ -8,7 +8,7 @@ by Manuel Sage & Bi Cheng Zhao & Yaoyao Fiona Zhao (2026).
 
 ------
 ### Preprint
-Not yet available.
+https://dx.doi.org/10.2139/ssrn.6685512
 
 -----
 ### Dataset
