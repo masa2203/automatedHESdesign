@@ -72,7 +72,7 @@ def sample_params(trial: optuna.Trial) -> Dict[str, Any]:
     :return: The sampled hyperparameters for the given trial.
     """
     num_wt = trial.suggest_int('num_wt', 0, 20)  # Number of wind turbines
-    bes_cap = trial.suggest_int('bes_cap', 1, 150)  # BES capacity (MWh)
+    bes_cap = trial.suggest_int('bes_cap', 0, 150)  # BES capacity (MWh)
     bes_rate = trial.suggest_int('bes_rate', 1, 40)  # BES charge/discharge rate (MW)
 
     return {

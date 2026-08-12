@@ -111,6 +111,10 @@ class BESS:
         assert -1 <= action <= 1, f"Action out of bounds [-1, 1]. Action passed: {action}"
         assert self.soc is not None, "Must call .reset() before .step() to properly initialize the storage."
 
+        # Check for zero-capacity BES
+        if not self.is_present:
+            return self._step_no_bes()
+
         energy_flow = self._soc_change(action, avail_power)  # energy flow from plant perspective
         power_flow = energy_flow / self.resolution_h  # power flow from plant perspective
         degr_cost = 0
@@ -224,7 +228,10 @@ class BESS:
         elif self.init_strategy == 'half':
             self.init_soc = 0.5
         elif self.init_strategy == 'random':
-            self.init_soc = rng.integers(0, self.total_cap) / self.total_cap
+            if not self.is_present:
+                self.init_soc = self.min_soc
+            else:
+                self.init_soc = rng.integers(0, self.total_cap) / self.total_cap
 
     def reset(self, options: Optional[dict] = None, rng: Optional[Generator] = None):
         """
@@ -270,6 +277,23 @@ class BESS:
             self.soc = self.socs[-1]
         else:
             self.reset()
+
+    @property
+    def is_present(self) -> bool:
+        """Return whether a physical BES is installed."""
+        return self.total_cap > 0
+
+    def _step_no_bes(self) -> Tuple[float, float]:
+        """Handle a timestep when no BES is installed."""
+        power_flow = 0.0
+        degr_cost = 0.0
+
+        if self.tracking:
+            self._tracking(power_flow, degr_cost)
+
+        self.count += 1
+
+        return power_flow, degr_cost
 
 
 class DODDegradingBESS(BESS):
@@ -348,6 +372,10 @@ class DODDegradingBESS(BESS):
         assert avail_power >= 0, "Available power must be non-negative!"
         assert -1 <= action <= 1, f"Action out of bounds [-1, 1]. Action passed: {action}"
         assert self.soc is not None, "Must call .reset() before .step() to properly initialize the storage."
+
+        # Check for zero-capacity BES
+        if not self.is_present:
+            return self._step_no_bes()
 
         soc_old = self.soc
         energy_flow = self._soc_change(action, avail_power)  # energy flow from plant perspective
