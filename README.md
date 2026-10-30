@@ -1,10 +1,12 @@
-# Title
-This repo contains the code of the paper:
+# Automated Planning of Hybrid Energy Systems with Machine Learning
+This repo contains the code of the journal paper:
 
-*A Machine Learning Framework for Automated Planning of Hybrid Energy Systems Using Generalizable Deep Reinforcement Learning* 
-(under review) 
+*A Machine Learning Framework for Automated Planning of Hybrid Energy Systems Using Generalizable Deep Reinforcement Learning*
 
 by Manuel Sage & Bi Cheng Zhao & Yaoyao Fiona Zhao (2026).
+
+Published at *Energy and AI* \
+https://doi.org/10.1016/j.egyai.2026.100907
 
 ------
 ### Preprint
